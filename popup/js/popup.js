@@ -48,6 +48,14 @@ function createHittersTable(teams) {
         hittersTable.columns(0).search(teamName).draw();
 
         window.location.hash = '#hitters-header';
+
+        console.log("hello");
+        chrome.runtime.sendMessage({
+              method: "hello"
+        },
+        function(response) {
+            document.getElementById("div").textContent = response.msg;
+        });
     });
 }
 

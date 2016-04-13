@@ -9,4 +9,11 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
 
     	sendResponse(teams);
   	}
+
+    if (message.method == "hello") {
+
+    	sendResponse({msg: "goodbye!"});
+    }
 });
+
+console.log("I am background.js");
