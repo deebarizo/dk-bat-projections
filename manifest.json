@@ -1,0 +1,26 @@
+{
+  	"manifest_version": 2,
+  	"name": "DK BAT",
+  	"version": "0.1",
+  	
+  	"background": {
+
+    	"scripts": ["background.js"],
+    	"persistent": false
+  	},
+  
+  	"content_scripts": [
+    	{
+    		"matches": ["https://rotogrinders.com/lineup-builder/mlb?site=draftkings"],
+      		"js": ["jquery-2.1.4.min.js", "content.js"]
+    	}
+  	],
+
+	  "browser_action": {
+
+    	"default_icon": "bat-icon.png",
+    	"default_popup": "popup/popup.html"
+  	},
+
+    "permissions": ["storage"]
+}
