@@ -1,3 +1,27 @@
+var port = chrome.runtime.connect({name:"mycontentscript"});
+
+port.onMessage.addListener(function(message,sender){
+        
+    if (message.greeting == "hello") {
+
+        alert('hello');
+
+        /*
+        
+        $('tbody.projections-container tr').each(function() {
+
+            var teamOnBat = $(this).find('td.suggested[data-column="team"]').text().trim();
+
+            if (teamOnBat !== 'ARI') {
+
+                $(this).hide();
+            }
+        });
+
+        */
+    }
+});
+
 // Chrome Storage API is asynchronous
 // http://stackoverflow.com/questions/16336367/what-is-the-difference-between-synchronous-and-asynchronous-programming-in-node
 

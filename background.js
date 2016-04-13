@@ -1,5 +1,3 @@
-var title;
-
 chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
   	if(message.method == 'setTeams') {
 
@@ -9,11 +7,19 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
 
     	sendResponse(teams);
   	}
-
-    if (message.method == "hello") {
-
-    	sendResponse({msg: "goodbye!"});
-    }
 });
 
-console.log("I am background.js");
+chrome.runtime.onConnect.addListener(function(port){
+
+	port.onMessage.addListener(function(msg) {
+
+	    if (msg.greeting == "hello") {
+	    	
+	    	var port = chrome.tabs.connect(0, {name: "mycontentscript"});
+
+	    	port.postMessage({greeting:"hello"});
+
+	    	console.log('hello');
+	    }
+	});
+});
