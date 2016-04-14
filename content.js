@@ -10,7 +10,14 @@ chrome.runtime.onConnect.addListener(function(port){
 
                 var teamOnBat = $(this).find('td.suggested[data-column="team"]').text().trim();
 
+                var position = $(this).find('td.pname').next().text().trim();
+
                 if (teamOnBat !== message.team) {
+
+                    $(this).hide();
+                }
+
+                if (position == 'SP') {
 
                     $(this).hide();
                 }

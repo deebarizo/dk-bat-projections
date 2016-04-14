@@ -2,10 +2,14 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
   	if(message.method == 'setTeams') {
 
   		teams = message.teams;
+
+  		console.log('setTeams');
   	
   	} else if(message.method == 'getTeams') {
 
     	sendResponse(teams);
+
+    	console.log('getTeams');
   	}
 });
 
