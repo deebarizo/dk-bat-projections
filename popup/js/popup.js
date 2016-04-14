@@ -1,3 +1,5 @@
+var port = chrome.runtime.connect({name: "popupPort"});
+
 chrome.runtime.sendMessage({ method: 'getTeams' }, function(response) {
   	
   	teams = response;
@@ -5,9 +7,14 @@ chrome.runtime.sendMessage({ method: 'getTeams' }, function(response) {
   	createTeamsTable(teams);
 
     createHittersTable(teams);
-});
 
-var port = chrome.runtime.connect({name: "popupPort"});
+    $('a.show-all-players').on('click', function(e) {
+
+        e.preventDefault();
+
+        port.postMessage({ method: "showAllPlayers" });
+    });
+});
 
 function createTeamsTable(teams) {
 

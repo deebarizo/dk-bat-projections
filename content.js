@@ -23,6 +23,11 @@ chrome.runtime.onConnect.addListener(function(port){
                 }
             });
         }
+
+        if (message.method == "showAllPlayers" && port.name == 'contentPort') {
+
+            $('tbody.projections-container tr').show();
+        }
     });
 });
 
