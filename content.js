@@ -1,25 +1,22 @@
-var port = chrome.runtime.connect({name:"mycontentscript"});
+chrome.runtime.onConnect.addListener(function(port){
 
-port.onMessage.addListener(function(message,sender){
-        
-    if (message.greeting == "hello") {
+    port.onMessage.addListener(function(message) {
 
-        alert('hello');
+        if (message.method == "sendTeam" && port.name == 'contentPort') {
 
-        /*
-        
-        $('tbody.projections-container tr').each(function() {
+            $('tbody.projections-container tr').show();
+            
+            $('tbody.projections-container tr').each(function() {
 
-            var teamOnBat = $(this).find('td.suggested[data-column="team"]').text().trim();
+                var teamOnBat = $(this).find('td.suggested[data-column="team"]').text().trim();
 
-            if (teamOnBat !== 'ARI') {
+                if (teamOnBat !== message.team) {
 
-                $(this).hide();
-            }
-        });
-
-        */
-    }
+                    $(this).hide();
+                }
+            });
+        }
+    });
 });
 
 // Chrome Storage API is asynchronous

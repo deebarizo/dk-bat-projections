@@ -7,7 +7,7 @@ chrome.runtime.sendMessage({ method: 'getTeams' }, function(response) {
     createHittersTable(teams);
 });
 
-var port = chrome.runtime.connect({name: "popup-port"});
+var port = chrome.runtime.connect({name: "popupPort"});
 
 function createTeamsTable(teams) {
 
@@ -51,7 +51,7 @@ function createHittersTable(teams) {
 
         window.location.hash = '#hitters-header';
 
-        port.postMessage({greeting:"hello"});
+        port.postMessage({ method: "sendTeam", team: teamName});
     });
 }
 

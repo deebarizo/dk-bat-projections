@@ -11,15 +11,18 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
 
 chrome.runtime.onConnect.addListener(function(port){
 
-	port.onMessage.addListener(function(msg) {
+	port.onMessage.addListener(function(message) {
 
-	    if (msg.greeting == "hello") {
-	    	
-	    	var port = chrome.tabs.connect(0, {name: "mycontentscript"});
+	    if (message.method == "sendTeam" && port.name == 'popupPort') {
 
-	    	port.postMessage({greeting:"hello"});
+			chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+			
+			    var activeTab = tabs[0];
+			    
+				var contentPort = chrome.tabs.connect(activeTab.id, {name: "contentPort"});
 
-	    	console.log('hello');
+    			contentPort.postMessage({ method: "sendTeam", team: message.team });
+			});
 	    }
 	});
 });
