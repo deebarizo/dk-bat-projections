@@ -28,7 +28,7 @@ function createTeamsTable(teams) {
     var teamsTable = $('#teams').DataTable({
         
         "paging": false,
-        "order": [[3, "desc"]]
+        "order": [[2, "desc"]]
     });
 }	
 

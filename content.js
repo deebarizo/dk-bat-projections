@@ -36,6 +36,8 @@ chrome.runtime.onConnect.addListener(function(port){
 
 chrome.storage.sync.get('costPerEntry', function(items) { 
 
+    console.log('You can see this message on RG Lineup Builder');
+
     var teamNames = [];
 
     $('tbody.projections-container tr').each(function() {
@@ -146,13 +148,13 @@ Team.prototype.getHitters = function() {
 
     hitters.sort(function(a, b) { // http://stackoverflow.com/a/979289
 
-        if (b.value !== a.value){
+        if (b.fpts !== a.fpts){
 
-            return parseFloat(b.value) - parseFloat(a.value);
+            return parseFloat(b.fpts) - parseFloat(a.fpts);
 
         } else {
             
-            return parseFloat(b.salary) - parseFloat(a.salary);
+            return parseFloat(a.salary) - parseFloat(b.salary);
         }
     });
 
