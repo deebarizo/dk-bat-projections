@@ -34,17 +34,40 @@ chrome.runtime.onConnect.addListener(function(port){
 
 function createTeamsTable(teams) {
 
-    for (var i = 0; i < teams.length; i++) {
-        
-        var tableRowHtml = '<tr><td><a class="team" href="#'+teams[i]['name']+'">'+teams[i]['name']+'</a></td><td>'+teams[i]['lineupIsSet']+'</td><td>'+teams[i]['stack']['avgSalary']+'</td><td>'+teams[i]['stack']['avgValue']+'</td></tr>';
+    chrome.storage.sync.get({ teamColumnIndex: 2 }, function(items) { // https://developer.chrome.com/extensions/storage#type-StorageArea
 
-        $('table#teams tbody').append(tableRowHtml);
-    }
+        for (var i = 0; i < teams.length; i++) {
+            
+            var tableRowHtml = '<tr><td><a class="team" href="#'+teams[i]['name']+'">'+teams[i]['name']+'</a></td><td>'+teams[i]['lineupIsSet']+'</td><td>'+teams[i]['stack']['avgSalary']+'</td><td>'+teams[i]['stack']['avgValue']+'</td></tr>';
 
-    var teamsTable = $('#teams').DataTable({
-        
-        "paging": false,
-        "order": [[2, "desc"]]
+            $('table#teams tbody').append(tableRowHtml);
+        }
+
+        var teamsTable = $('#teams').DataTable({
+            
+            "paging": false,
+            "order": [[items.teamColumnIndex, "desc"]],
+            "aoColumns": [
+                null,
+                null,
+                { "orderSequence": ["desc", "asc"] },
+                { "orderSequence": ["desc", "asc"] }
+            ]
+        });
+
+        $('table#teams th:eq(2)').on('click', function() {
+
+            alert('2');
+
+            chrome.storage.sync.set({ teamColumnIndex: 2 }, function() {} );
+        });
+
+        $('table#teams th:eq(3)').on('click', function() {
+
+            alert('3');
+
+            chrome.storage.sync.set({ teamColumnIndex: 3 }, function() {} );
+        });
     });
 }	
 

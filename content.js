@@ -6,43 +6,35 @@ chrome.runtime.onConnect.addListener(function(port){
 
         if (message.method == 'getTeams' && port.name == 'contentPort') {
 
-            // Chrome Storage API is asynchronous
-            // http://stackoverflow.com/questions/16336367/what-is-the-difference-between-synchronous-and-asynchronous-programming-in-node
+            var teamNames = [];
 
-            chrome.storage.sync.get('costPerEntry', function(items) { 
+            $('tbody.projections-container tr').each(function() {
 
-                var teamNames = [];
+                var teamName = $(this).find('td.suggested[data-column="team"]').text();
 
-                $('tbody.projections-container tr').each(function() {
-
-                    var teamName = $(this).find('td.suggested[data-column="team"]').text();
-
-                    teamNames.push(teamName);
-                });
-
-                teamNames = teamNames.filter(onlyUnique);
-
-                var teams = [];
-
-                for (var i = 0; i < teamNames.length; i++) {
-
-                    var team = new Team(teamNames[i]);
-
-                    if (team.hitters.length > 5) {
-
-                        teams.push(team);
-                    }
-                }
-
-                teams.sort(function(a, b) { // http://stackoverflow.com/a/979289
-
-                    return parseFloat(b.stack.avgValue) - parseFloat(a.stack.avgValue);
-                });
-
-                console.log(teams);
-
-                contentPort.postMessage({ method: 'sendTeams', teams: teams });
+                teamNames.push(teamName);
             });
+
+            teamNames = teamNames.filter(onlyUnique);
+
+            var teams = [];
+
+            for (var i = 0; i < teamNames.length; i++) {
+
+                var team = new Team(teamNames[i]);
+
+                if (team.hitters.length > 5) {
+
+                    teams.push(team);
+                }
+            }
+
+            teams.sort(function(a, b) { // http://stackoverflow.com/a/979289
+
+                return parseFloat(b.stack.avgValue) - parseFloat(a.stack.avgValue);
+            });
+
+            contentPort.postMessage({ method: 'sendTeams', teams: teams });
         }
 
         if (message.method == "sendTeam" && port.name == 'contentPort') {
