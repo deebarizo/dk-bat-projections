@@ -1,5 +1,7 @@
 var port = chrome.runtime.connect({name: "popupPort"});
 
+port.postMessage({ method: "showAllPlayers" });
+
 chrome.runtime.sendMessage({ method: 'getTeams' }, function(response) {
   	
   	teams = response;
