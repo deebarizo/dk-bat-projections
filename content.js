@@ -1,6 +1,49 @@
+var contentPort = chrome.runtime.connect({name: "contentPort"});
+
 chrome.runtime.onConnect.addListener(function(port){
 
     port.onMessage.addListener(function(message) {
+
+        if (message.method == 'getTeams' && port.name == 'contentPort') {
+
+            // Chrome Storage API is asynchronous
+            // http://stackoverflow.com/questions/16336367/what-is-the-difference-between-synchronous-and-asynchronous-programming-in-node
+
+            chrome.storage.sync.get('costPerEntry', function(items) { 
+
+                var teamNames = [];
+
+                $('tbody.projections-container tr').each(function() {
+
+                    var teamName = $(this).find('td.suggested[data-column="team"]').text();
+
+                    teamNames.push(teamName);
+                });
+
+                teamNames = teamNames.filter(onlyUnique);
+
+                var teams = [];
+
+                for (var i = 0; i < teamNames.length; i++) {
+
+                    var team = new Team(teamNames[i]);
+
+                    if (team.hitters.length > 5) {
+
+                        teams.push(team);
+                    }
+                }
+
+                teams.sort(function(a, b) { // http://stackoverflow.com/a/979289
+
+                    return parseFloat(b.stack.avgValue) - parseFloat(a.stack.avgValue);
+                });
+
+                console.log(teams);
+
+                contentPort.postMessage({ method: 'sendTeams', teams: teams });
+            });
+        }
 
         if (message.method == "sendTeam" && port.name == 'contentPort') {
 
@@ -28,48 +71,6 @@ chrome.runtime.onConnect.addListener(function(port){
 
             $('tbody.projections-container tr').show();
         }
-    });
-});
-
-// Chrome Storage API is asynchronous
-// http://stackoverflow.com/questions/16336367/what-is-the-difference-between-synchronous-and-asynchronous-programming-in-node
-
-chrome.storage.sync.get('costPerEntry', function(items) { 
-
-    console.log('You can see this message on RG Lineup Builder');
-
-    var teamNames = [];
-
-    $('tbody.projections-container tr').each(function() {
-
-        var teamName = $(this).find('td.suggested[data-column="team"]').text();
-
-        teamNames.push(teamName);
-    });
-
-    teamNames = teamNames.filter(onlyUnique);
-
-    var teams = [];
-
-    for (var i = 0; i < teamNames.length; i++) {
-
-        var team = new Team(teamNames[i]);
-
-        if (team.hitters.length > 5) {
-
-            teams.push(team);
-        }
-    }
-
-    teams.sort(function(a, b) { // http://stackoverflow.com/a/979289
-
-        return parseFloat(b.stack.avgValue) - parseFloat(a.stack.avgValue);
-    });
-
-    chrome.runtime.sendMessage({
-     
-        method: 'setTeams',
-        teams: teams
     });
 });
 

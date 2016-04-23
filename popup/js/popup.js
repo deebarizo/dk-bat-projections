@@ -1,22 +1,36 @@
-var port = chrome.runtime.connect({name: "popupPort"});
+// When you click the popup icon, the following messages get sent to background.js.
 
-port.postMessage({ method: "showAllPlayers" });
+var popupPort = chrome.runtime.connect({ name: "popupPort" });
 
-chrome.runtime.sendMessage({ method: 'getTeams' }, function(response) {
-  	
-  	teams = response;
+popupPort.postMessage({ method: "showAllPlayers" });
 
-  	createTeamsTable(teams);
+popupPort.postMessage({ method: 'getTeams' });
 
-    createHittersTable(teams);
 
-    $('a.show-all-players').on('click', function(e) {
+// This receives messages from background.js.
 
-        e.preventDefault();
+chrome.runtime.onConnect.addListener(function(port){
 
-        port.postMessage({ method: "showAllPlayers" });
+    port.onMessage.addListener(function(message) {
+
+        if (message.method == "sendTeams" && port.name == 'popupPort') {
+
+            createTeamsTable(message.teams);
+
+            createHittersTable(message.teams);
+
+            $('a.show-all-players').on('click', function(e) {
+
+                e.preventDefault();
+
+                popupPort.postMessage({ method: "showAllPlayers" });
+
+                window.close();
+            });
+        }
     });
 });
+
 
 function createTeamsTable(teams) {
 
@@ -60,7 +74,7 @@ function createHittersTable(teams) {
 
         window.location.hash = '#hitters-header';
 
-        port.postMessage({ method: "sendTeam", team: teamName});
+        popupPort.postMessage({ method: "sendTeam", team: teamName});
     });
 }
 
