@@ -44,6 +44,7 @@ chrome.runtime.onConnect.addListener(function(port){
 
                     name: tableRow.find('td.pname').text(),
                     position: tableRow.find('td.voluntary').text(),
+                    teamAbbrev: tableRow.find('td.suggested[data-column="team"]').text(), 
                     fpts: parseFloat(tableRow.find('input.fpts').val())
                 };
 
