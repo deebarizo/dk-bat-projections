@@ -18,7 +18,7 @@ chrome.runtime.onConnect.addListener(function(port){
 
 	    	var popupPort = chrome.runtime.connect({ name: "popupPort" });
 
-	    	popupPort.postMessage({ method: 'sendTeams', teams: message.teams });
+	    	popupPort.postMessage({ method: 'sendTeams', teams: message.teams, players: message.players });
 	    }
 
 	    if (message.method == 'sendTeam' && port.name == 'popupPort') {

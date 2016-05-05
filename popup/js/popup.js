@@ -17,6 +17,14 @@ chrome.runtime.onConnect.addListener(function(port){
 
             createTables(message.teams);
 
+            // The following messages get sent to DK Ownerships Chrome Extension.
+
+            var dkOwnershipsExtensionId = 'dbmcmllglakammflgakbmdiffaiakfik';
+
+            var dkOwnershipsPort = chrome.runtime.connect(dkOwnershipsExtensionId);
+
+            dkOwnershipsPort.postMessage({ players: message.players });
+
             $('a.show-all-players').on('click', function(e) {
 
                 e.preventDefault();

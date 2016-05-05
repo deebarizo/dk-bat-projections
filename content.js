@@ -34,7 +34,23 @@ chrome.runtime.onConnect.addListener(function(port){
                 return parseFloat(b.stack.avgValue) - parseFloat(a.stack.avgValue);
             });
 
-            contentPort.postMessage({ method: 'sendTeams', teams: teams });
+            var players = [];
+
+            $('tbody.projections-container tr').each(function() {
+
+                var tableRow = $(this);
+
+                var player = {
+
+                    name: tableRow.find('td.pname').text(),
+                    position: tableRow.find('td.voluntary').text(),
+                    fpts: parseFloat(tableRow.find('input.fpts').val())
+                };
+
+                players.push(player);
+            }); 
+
+            contentPort.postMessage({ method: 'sendTeams', teams: teams, players: players });
         }
 
         if (message.method == "sendTeam" && port.name == 'contentPort') {
