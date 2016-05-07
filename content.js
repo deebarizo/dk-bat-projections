@@ -44,12 +44,15 @@ chrome.runtime.onConnect.addListener(function(port){
 
                     name: tableRow.find('td.pname').text(),
                     position: tableRow.find('td.voluntary').text(),
+                    battingOrder: tableRow.find('td.order').text(),
                     teamAbbrev: tableRow.find('td.suggested[data-column="team"]').text(), 
                     fpts: parseFloat(tableRow.find('input.fpts').val())
                 };
 
                 players.push(player);
             }); 
+
+            console.log(players);
 
             contentPort.postMessage({ method: 'sendTeams', teams: teams, players: players });
         }
